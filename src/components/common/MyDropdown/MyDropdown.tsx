@@ -23,7 +23,7 @@ import { SelectedOptionsList } from './SelectedOptionsList';
 type DropdownProps = {
   label?: string;
   triggerType: 'hover' | 'focus';
-  onSelect?: (option: string) => void;
+  onSelect?: (options: Array<string>) => void;
   wrapperClassName?: string;
   openByKey?: string;
 } & PropsWithChildren & InputHTMLAttributes<HTMLInputElement>;
@@ -39,6 +39,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
   wrapperClassName,
   onChange,
   openByKey,
+  onSelect,
   ...props
 }, ref) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -116,7 +117,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
   }, [props.value, val]);
 
   return (
-    <MyDropdownProvider>
+    <MyDropdownProvider getSelectedOptions={onSelect}>
       <div
         ref={ref}
         className={classnames(wrapperClassName, 'relative w-fit hover:bg-slate-100 shadow-md', {

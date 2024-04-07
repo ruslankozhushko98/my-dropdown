@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, createContext, useContext, useState } from 'react';
+import { FC, PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 
 type ContextProps = {
   selectedOptions: Array<string>;
@@ -7,8 +7,17 @@ type ContextProps = {
 
 const MyDropdownContext = createContext<ContextProps | null>(null);
 
-export const MyDropdownProvider: FC<PropsWithChildren> = ({ children }) => {
+type Props = {
+  getSelectedOptions?: (options: Array<string>) => void;
+} & PropsWithChildren;
+
+export const MyDropdownProvider: FC<Props> = ({ children, getSelectedOptions }) => {
   const [selectedOptions, setSelectedOptions] = useState<Array<string>>([]);
+
+  useEffect(() => {
+    getSelectedOptions?.(selectedOptions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedOptions]);
 
   const toggleOptionSelected = (option: string): void => {
     if (selectedOptions.includes(option)) {

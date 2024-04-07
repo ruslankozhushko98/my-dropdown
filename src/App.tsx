@@ -8,6 +8,7 @@ function App() {
         placeholder="Enter value"
         triggerType="focus"
         openByKey="Enter"
+        onSelect={console.log}
       >
         <MyDropdownOption value="cat">
           Cat
