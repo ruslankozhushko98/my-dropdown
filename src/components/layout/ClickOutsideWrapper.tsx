@@ -24,6 +24,7 @@ export const ClickOutsideWrapper: FC<Props> = ({ children, onClickOutside, exclu
           break;
         }
       }
+
       if (!isExcluded) {
         handleClickOutside(event);
       }

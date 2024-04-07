@@ -30,7 +30,6 @@ export const MyDropdown: FC<DropdownProps> = ({
   triggerType = 'focus',
   className,
   onFocus,
-  onBlur,
   onMouseEnter,
   onMouseLeave,
   wrapperClassName,
@@ -86,13 +85,15 @@ export const MyDropdown: FC<DropdownProps> = ({
 
   return (
     <MyDropdownProvider>
-      <div className={classnames(wrapperClassName, 'relative w-fit')}>
+      <div
+        className={classnames(wrapperClassName, 'relative w-fit')}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
         <input
           {...props}
           ref={inputRef.current}
           onFocus={handleFocus}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
           className={classnames(
             className,
             'focus:outline-none p-1.5 rounded-md hover:bg-slate-100 shadow-md', {
@@ -109,10 +110,12 @@ export const MyDropdown: FC<DropdownProps> = ({
         )}
 
         {isContentVisible && (
-          <div className="absolute bg-slate-100 py-2 px-1 mt-1 rounded-md shadow-md w-full z-10">
-            <ClickOutsideWrapper onClickOutside={handleHideContent} excludeRefs={[inputRef]}>
-              {options?.length === 0 ? <p>No items found!</p> : <>{options}</>}
-            </ClickOutsideWrapper>
+          <div className="absolute pt-1 w-full z-10">
+            <div className="bg-slate-100 py-2 px-1 rounded-md shadow-md">
+              <ClickOutsideWrapper onClickOutside={handleHideContent} excludeRefs={[inputRef]}>
+                {options?.length === 0 ? <p>No items found!</p> : <>{options}</>}
+              </ClickOutsideWrapper>
+            </div>
           </div>
         )}
       </div>
