@@ -53,7 +53,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
   useEffect(() => {
     const handlePressEnter = (e: KeyboardEvent): void => {
       if (e.key === openByKey) {
-        setIsContentVisible(!isContentVisible);
+        setIsContentVisible(true);
 
         if (isContentVisible) {
           inputRef.current?.focus();
