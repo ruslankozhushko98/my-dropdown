@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 
-import { MyDropdown, MyDropdownItem } from './components/MyDropdown';
+import { MyDropdown, MyDropdownItem } from './components/common/MyDropdown';
 
 function App() {
   const [value, setValue] = useState<string>('');
@@ -18,12 +18,12 @@ function App() {
         value={value}
         onChange={handleChange}
       >
-        <MyDropdownItem value="option-1">
-          Option 1
+        <MyDropdownItem value="asd-1">
+          Asd 1
         </MyDropdownItem>
 
-        <MyDropdownItem value="option-2">
-          Option 2
+        <MyDropdownItem value="qwe-2">
+          Qwe 2
         </MyDropdownItem>
       </MyDropdown>
     </div>

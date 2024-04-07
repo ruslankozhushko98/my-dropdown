@@ -1,6 +1,5 @@
 import {
   Children,
-  FC,
   FocusEvent,
   InputHTMLAttributes,
   MouseEvent,
@@ -9,15 +8,20 @@ import {
   isValidElement,
   useState,
   useMemo,
+  useRef,
+  FC,
+  Ref,
 } from 'react';
 import classnames from 'classnames';
 
 import { MyDropdownProvider } from 'src/contexts/MyDropdownContext';
+import { ClickOutsideWrapper } from 'src/components/layout/ClickOutsideWrapper';
 
 type DropdownProps = {
   label?: string;
   triggerType: 'hover' | 'focus';
   onSelect?: (option: string) => void;
+  wrapperClassName?: string;
 } & PropsWithChildren & InputHTMLAttributes<HTMLInputElement>;
 
 export const MyDropdown: FC<DropdownProps> = ({
@@ -29,8 +33,10 @@ export const MyDropdown: FC<DropdownProps> = ({
   onBlur,
   onMouseEnter,
   onMouseLeave,
+  wrapperClassName,
   ...props
 }) => {
+  const inputRef = useRef<Ref<HTMLInputElement>>(null);
   const [isContentVisible, setIsContentVisible] = useState<boolean>(false);
 
   const handleShowContent = (): void => setIsContentVisible(true);
@@ -43,14 +49,6 @@ export const MyDropdown: FC<DropdownProps> = ({
     }
 
     onFocus?.(e);
-  };
-
-  const handleBlur = (e: FocusEvent<HTMLInputElement>): void => {
-    if (triggerType === 'focus') {
-      handleHideContent();
-    }
-
-    onBlur?.(e);
   };
 
   const handleMouseEnter = (e: MouseEvent<HTMLInputElement>): void => {
@@ -88,16 +86,16 @@ export const MyDropdown: FC<DropdownProps> = ({
 
   return (
     <MyDropdownProvider>
-      <div className="relative w-fit">
+      <div className={classnames(wrapperClassName, 'relative w-fit')}>
         <input
           {...props}
+          ref={inputRef.current}
           onFocus={handleFocus}
-          onBlur={handleBlur}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           className={classnames(
             className,
-            'border-2 p-1.5 rounded-md hover:bg-slate-100', {
+            'focus:outline-none p-1.5 rounded-md hover:bg-slate-100 shadow-md', {
               ['bg-slate-100']: isContentVisible,
               ['bg-slate-50']: !isContentVisible,
             },
@@ -112,7 +110,9 @@ export const MyDropdown: FC<DropdownProps> = ({
 
         {isContentVisible && (
           <div className="absolute bg-slate-100 py-2 px-1 mt-1 rounded-md shadow-md w-full z-10">
-            {options?.length === 0 ? <p>No items found!</p> : options}
+            <ClickOutsideWrapper onClickOutside={handleHideContent} excludeRefs={[inputRef]}>
+              {options?.length === 0 ? <p>No items found!</p> : <>{options}</>}
+            </ClickOutsideWrapper>
           </div>
         )}
       </div>

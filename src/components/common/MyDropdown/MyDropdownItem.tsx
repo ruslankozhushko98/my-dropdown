@@ -5,24 +5,32 @@ import { useMyDropdownContext } from 'src/contexts/MyDropdownContext';
 
 type DropdownItemProps = {
   value?: string | number;
-} & PropsWithChildren & HTMLAttributes<HTMLElement>;
+} & PropsWithChildren & HTMLAttributes<HTMLParagraphElement>;
 
 export const MyDropdownItem: FC<DropdownItemProps> = ({
   children,
   className,
+  value,
   ...props
 }) => {
-  const myDropdownContext = useMyDropdownContext();
+  const { toggleOptionSelected, selectedOptions } = useMyDropdownContext();
+
+  const isSelected: boolean = selectedOptions.includes(String(value));
+
+  const toggleSelected = (): void => toggleOptionSelected(String(value));
 
   return (
     <p
       className={
         classnames(
           className,
-          'hover:bg-slate-200 cursor-pointer px-1 py-0.5 my-0.5 rounded-sm',
+          'hover:bg-slate-200 cursor-pointer px-1 py-0.5 my-0.5 rounded-sm', {
+            ['bg-slate-300']: isSelected,
+          },
         )
       }
       {...props}
+      onClick={toggleSelected}
     >
       {children}
     </p>
