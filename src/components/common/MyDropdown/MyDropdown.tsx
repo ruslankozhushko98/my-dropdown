@@ -11,7 +11,6 @@ import {
   useMemo,
   useRef,
   useEffect,
-  Ref,
   forwardRef,
   ChangeEvent,
 } from 'react';
@@ -42,7 +41,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
   openByKey,
   ...props
 }, ref) => {
-  const inputRef = useRef<Ref<HTMLInputElement>>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isContentVisible, setIsContentVisible] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
 
@@ -55,6 +54,10 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
     const handlePressEnter = (e: KeyboardEvent): void => {
       if (e.key === openByKey) {
         setIsContentVisible(!isContentVisible);
+
+        if (isContentVisible) {
+          inputRef.current?.focus();
+        }
       }
     };
 
@@ -130,7 +133,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
             {...props}
             value={val}
             onChange={handleChange}
-            ref={inputRef.current}
+            ref={inputRef}
             onFocus={handleFocus}
             className={classnames(
               className,
