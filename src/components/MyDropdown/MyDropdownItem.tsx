@@ -1,5 +1,5 @@
 import { FC, HTMLAttributes, PropsWithChildren } from 'react';
-import classNames from 'classnames';
+import classnames from 'classnames';
 
 import { useMyDropdownContext } from 'src/contexts/MyDropdownContext';
 
@@ -17,7 +17,7 @@ export const MyDropdownItem: FC<DropdownItemProps> = ({
   return (
     <p
       className={
-        classNames(
+        classnames(
           className,
           'hover:bg-slate-200 cursor-pointer px-1 py-0.5 my-0.5 rounded-sm',
         )

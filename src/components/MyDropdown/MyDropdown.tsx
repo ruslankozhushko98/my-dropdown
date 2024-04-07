@@ -80,7 +80,7 @@ export const MyDropdown: FC<DropdownProps> = ({
   const options = useMemo(() => {
     return props.value
       ? opts?.filter(
-        child => child.props.value.toLowerCase().includes(String(props.value).toLowerCase()),
+        child => child.props.children.toLowerCase().includes(String(props.value).toLowerCase()),
       )
       : opts;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,7 +112,7 @@ export const MyDropdown: FC<DropdownProps> = ({
 
         {isContentVisible && (
           <div className="absolute bg-slate-100 py-2 px-1 mt-1 rounded-md shadow-md w-full z-10">
-            {options}
+            {options?.length === 0 ? <p>No items found!</p> : options}
           </div>
         )}
       </div>
