@@ -1,45 +1,121 @@
-import { FC, PropsWithChildren, SelectHTMLAttributes, createContext, useContext } from 'react';
+import {
+  Children,
+  FC,
+  FocusEvent,
+  InputHTMLAttributes,
+  MouseEvent,
+  PropsWithChildren,
+  cloneElement,
+  isValidElement,
+  useState,
+  useMemo,
+} from 'react';
+import classnames from 'classnames';
 
-type ContextProps = {
-  array: [],
-};
-
-const MyDropdownContext = createContext<ContextProps | null>(null);
-
-const useMyDropdownContext = () => {
-  const context = useContext(MyDropdownContext);
-
-  if (!context) {
-    throw new Error('MyDropdownItem component must be used the only inside of MyDropdown component!');
-  }
-
-  return context;
-};
+import { MyDropdownProvider } from 'src/contexts/MyDropdownContext';
 
 type DropdownProps = {
   label?: string;
-} & PropsWithChildren & SelectHTMLAttributes<HTMLSelectElement>;
+  triggerType: 'hover' | 'focus';
+  onSelect?: (option: string) => void;
+} & PropsWithChildren & InputHTMLAttributes<HTMLInputElement>;
 
-export const MyDropdown: FC<DropdownProps> = ({ children, label, ...props }) => {
+export const MyDropdown: FC<DropdownProps> = ({
+  children,
+  label,
+  triggerType = 'focus',
+  className,
+  onFocus,
+  onBlur,
+  onMouseEnter,
+  onMouseLeave,
+  ...props
+}) => {
+  const [isContentVisible, setIsContentVisible] = useState<boolean>(false);
+
+  const handleShowContent = (): void => setIsContentVisible(true);
+
+  const handleHideContent = (): void => setIsContentVisible(false);
+
+  const handleFocus = (e: FocusEvent<HTMLInputElement>): void => {
+    if (triggerType === 'focus') {
+      handleShowContent();
+    }
+
+    onFocus?.(e);
+  };
+
+  const handleBlur = (e: FocusEvent<HTMLInputElement>): void => {
+    if (triggerType === 'focus') {
+      handleHideContent();
+    }
+
+    onBlur?.(e);
+  };
+
+  const handleMouseEnter = (e: MouseEvent<HTMLInputElement>): void => {
+    if (triggerType === 'hover') {
+      handleShowContent();
+    }
+
+    onMouseEnter?.(e);
+  };
+
+  const handleMouseLeave = (e: MouseEvent<HTMLInputElement>): void => {
+    if (triggerType === 'hover') {
+      handleHideContent();
+    }
+
+    onMouseLeave?.(e);
+  };
+
+  const opts = Children.map(children, child => {
+    if (isValidElement(child)) {
+      return cloneElement(child);
+    }
+
+    return child;
+  });
+
+  const options = useMemo(() => {
+    return props.value
+      ? opts?.filter(
+        child => child.props.value.toLowerCase().includes(String(props.value).toLowerCase()),
+      )
+      : opts;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.value]);
+
   return (
-    <MyDropdownContext.Provider value={{ array: [] }}>
-      <select {...props}>
-        {children}
-      </select>
-    </MyDropdownContext.Provider>
-  );
-};
+    <MyDropdownProvider>
+      <div className="relative w-fit">
+        <input
+          {...props}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className={classnames(
+            className,
+            'border-2 p-1.5 rounded-md hover:bg-slate-100', {
+              ['bg-slate-100']: isContentVisible,
+              ['bg-slate-50']: !isContentVisible,
+            },
+          )}
+        />
 
-type DropdownItemProps = {
-  value?: string | number;
-} & PropsWithChildren & SelectHTMLAttributes<HTMLOptionElement>;
+        {label && (
+          <label className="absolute left-2.5 top-[-10px] text-sm text-slate-500 font-medium">
+            {label}
+          </label>
+        )}
 
-export const MyDropdownItem: FC<DropdownItemProps> = ({ children, value }) => {
-  const myDropdownContext = useMyDropdownContext();
-
-  return (
-    <option value={value}>
-      {children}
-    </option>
+        {isContentVisible && (
+          <div className="absolute bg-slate-100 py-2 px-1 mt-1 rounded-md shadow-md w-full z-10">
+            {options}
+          </div>
+        )}
+      </div>
+    </MyDropdownProvider>
   );
 };

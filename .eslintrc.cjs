@@ -26,5 +26,6 @@ module.exports = {
     'max-lines': ['error', 150],
     'no-multiple-empty-lines': ['error', { max: 1 }],
     eqeqeq: 'error',
+    'max-len': ['error', { 'code': 110 }]
   },
 }
