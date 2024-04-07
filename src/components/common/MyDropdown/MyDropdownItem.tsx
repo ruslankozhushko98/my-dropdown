@@ -24,8 +24,9 @@ export const MyDropdownItem: FC<DropdownItemProps> = ({
       className={
         classnames(
           className,
-          'hover:bg-slate-200 cursor-pointer px-1 py-0.5 my-0.5 rounded-sm', {
+          'cursor-pointer px-1 py-0.5 my-0.5 rounded-sm', {
             ['bg-slate-300']: isSelected,
+            ['hover:bg-slate-200']: !isSelected,
           },
         )
       }
