@@ -50,7 +50,7 @@ export const MyDropdown: FC<DropdownProps> = ({
     onFocus?.(e);
   };
 
-  const handleMouseEnter = (e: MouseEvent<HTMLInputElement>): void => {
+  const handleMouseMove = (e: MouseEvent<HTMLInputElement>): void => {
     if (triggerType === 'hover') {
       handleShowContent();
     }
@@ -87,7 +87,7 @@ export const MyDropdown: FC<DropdownProps> = ({
     <MyDropdownProvider>
       <div
         className={classnames(wrapperClassName, 'relative w-fit')}
-        onMouseEnter={handleMouseEnter}
+        onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
         <input
