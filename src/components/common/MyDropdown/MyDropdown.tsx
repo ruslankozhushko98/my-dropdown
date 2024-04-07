@@ -9,8 +9,8 @@ import {
   useState,
   useMemo,
   useRef,
-  FC,
   Ref,
+  forwardRef,
 } from 'react';
 import classnames from 'classnames';
 
@@ -24,7 +24,7 @@ type DropdownProps = {
   wrapperClassName?: string;
 } & PropsWithChildren & InputHTMLAttributes<HTMLInputElement>;
 
-export const MyDropdown: FC<DropdownProps> = ({
+export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
   children,
   label,
   triggerType = 'focus',
@@ -34,7 +34,7 @@ export const MyDropdown: FC<DropdownProps> = ({
   onMouseLeave,
   wrapperClassName,
   ...props
-}) => {
+}, ref) => {
   const inputRef = useRef<Ref<HTMLInputElement>>(null);
   const [isContentVisible, setIsContentVisible] = useState<boolean>(false);
 
@@ -86,6 +86,7 @@ export const MyDropdown: FC<DropdownProps> = ({
   return (
     <MyDropdownProvider>
       <div
+        ref={ref}
         className={classnames(wrapperClassName, 'relative w-fit')}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -121,4 +122,4 @@ export const MyDropdown: FC<DropdownProps> = ({
       </div>
     </MyDropdownProvider>
   );
-};
+});
