@@ -1,30 +1,29 @@
-import { ChangeEvent, useState } from 'react';
-
-import { MyDropdown, MyDropdownItem } from './components/common/MyDropdown';
+import { MyDropdown, MyDropdownOption } from './components/common/MyDropdown';
 
 function App() {
-  const [value, setValue] = useState<string>('');
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    setValue(e.target.value);
-  };
-
   return (
     <div className="p-4">
       <MyDropdown
         label="Label"
         placeholder="Enter value"
         triggerType="focus"
-        value={value}
-        onChange={handleChange}
+        openByKey="Enter"
       >
-        <MyDropdownItem value="asd-1">
-          Asd 1
-        </MyDropdownItem>
+        <MyDropdownOption value="cat">
+          Cat
+        </MyDropdownOption>
 
-        <MyDropdownItem value="qwe-2">
-          Qwe 2
-        </MyDropdownItem>
+        <MyDropdownOption value="dog">
+          Dog
+        </MyDropdownOption>
+
+        <MyDropdownOption value="duck">
+          Duck
+        </MyDropdownOption>
+
+        <MyDropdownOption value="bird">
+          Bird
+        </MyDropdownOption>
       </MyDropdown>
     </div>
   );

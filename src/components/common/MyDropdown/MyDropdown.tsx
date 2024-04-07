@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   Children,
   FocusEvent,
@@ -9,19 +10,23 @@ import {
   useState,
   useMemo,
   useRef,
+  useEffect,
   Ref,
   forwardRef,
+  ChangeEvent,
 } from 'react';
 import classnames from 'classnames';
 
 import { MyDropdownProvider } from 'src/contexts/MyDropdownContext';
 import { ClickOutsideWrapper } from 'src/components/layout/ClickOutsideWrapper';
+import { SelectedOptionsList } from './SelectedOptionsList';
 
 type DropdownProps = {
   label?: string;
   triggerType: 'hover' | 'focus';
   onSelect?: (option: string) => void;
   wrapperClassName?: string;
+  openByKey?: string;
 } & PropsWithChildren & InputHTMLAttributes<HTMLInputElement>;
 
 export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
@@ -30,13 +35,35 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
   triggerType = 'focus',
   className,
   onFocus,
-  onMouseEnter,
+  onMouseMove,
   onMouseLeave,
   wrapperClassName,
+  onChange,
+  openByKey,
   ...props
 }, ref) => {
   const inputRef = useRef<Ref<HTMLInputElement>>(null);
   const [isContentVisible, setIsContentVisible] = useState<boolean>(false);
+  const [value, setValue] = useState<string>('');
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setValue(e.target.value);
+    onChange?.(e);
+  };
+
+  useEffect(() => {
+    const handlePressEnter = (e: KeyboardEvent): void => {
+      if (e.key === openByKey) {
+        setIsContentVisible(!isContentVisible);
+      }
+    };
+
+    document.addEventListener('keydown', handlePressEnter);
+
+    return () => {
+      document.addEventListener('keydown', handlePressEnter);
+    };
+  }, [isContentVisible, openByKey]);
 
   const handleShowContent = (): void => setIsContentVisible(true);
 
@@ -55,7 +82,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
       handleShowContent();
     }
 
-    onMouseEnter?.(e);
+    onMouseMove?.(e);
   };
 
   const handleMouseLeave = (e: MouseEvent<HTMLInputElement>): void => {
@@ -74,35 +101,43 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
     return child;
   });
 
+  const val = props.value || value;
+
   const options = useMemo(() => {
-    return props.value
+    return val
       ? opts?.filter(
-        child => child.props.children.toLowerCase().includes(String(props.value).toLowerCase()),
+        child => child.props.children.toLowerCase().includes(String(val).toLowerCase()),
       )
       : opts;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.value]);
+  }, [props.value, val]);
 
   return (
     <MyDropdownProvider>
       <div
         ref={ref}
-        className={classnames(wrapperClassName, 'relative w-fit')}
+        className={classnames(wrapperClassName, 'relative w-fit hover:bg-slate-100 shadow-md', {
+          ['bg-slate-100']: isContentVisible,
+          ['bg-slate-50']: !isContentVisible,
+        })}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        <input
-          {...props}
-          ref={inputRef.current}
-          onFocus={handleFocus}
-          className={classnames(
-            className,
-            'focus:outline-none p-1.5 rounded-md hover:bg-slate-100 shadow-md', {
-              ['bg-slate-100']: isContentVisible,
-              ['bg-slate-50']: !isContentVisible,
-            },
-          )}
-        />
+        <div>
+          <SelectedOptionsList />
+
+          <input
+            {...props}
+            value={val}
+            onChange={handleChange}
+            ref={inputRef.current}
+            onFocus={handleFocus}
+            className={classnames(
+              className,
+              'focus:outline-none p-1.5 rounded-md bg-inherit',
+            )}
+          />
+        </div>
 
         {label && (
           <label className="absolute left-2.5 top-[-10px] text-sm text-slate-500 font-medium">
