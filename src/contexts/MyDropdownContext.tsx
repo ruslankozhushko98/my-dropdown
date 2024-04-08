@@ -48,7 +48,7 @@ export const useMyDropdownContext = () => {
   const context = useContext(MyDropdownContext);
 
   if (!context) {
-    throw new Error('MyDropdownItem component must be used the only inside of MyDropdown component!');
+    throw new Error('MyDropdownOption component must be used the only inside of MyDropdown component!');
   }
 
   return context;
