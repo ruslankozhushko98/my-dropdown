@@ -13,6 +13,7 @@ import {
   useEffect,
   forwardRef,
   ChangeEvent,
+  ReactNode,
 } from 'react';
 import classnames from 'classnames';
 
@@ -27,6 +28,7 @@ type DropdownProps = {
   wrapperClassName?: string;
   openByKey?: string;
   isError?: boolean;
+  helperText?: ReactNode | string;
 } & PropsWithChildren & InputHTMLAttributes<HTMLInputElement>;
 
 export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
@@ -43,6 +45,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
   onSelect,
   isError,
   required,
+  helperText,
   ...props
 }, ref) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -119,50 +122,70 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.value, val]);
 
+  const customHelperText =
+    typeof helperText === 'string'
+      ? <p
+        className={classnames('text-xs font-medium ml-2.5', {
+          ['text-red-500']: isError,
+          ['text-slate-500']: !isError,
+        })}
+      >
+        {helperText}
+      </p>
+      : <>{helperText}</>;
+
   return (
     <MyDropdownProvider getSelectedOptions={onSelect}>
-      <div
-        ref={ref}
-        className={classnames(wrapperClassName, 'relative w-fit hover:bg-slate-100 shadow-md', {
-          ['bg-red-50 hover:bg-red-100']: isError,
-          ['bg-slate-100']: isContentVisible && !isError,
-          ['bg-slate-50']: !isContentVisible && !isError,
-        })}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      >
-        <div>
-          <SelectedOptionsList />
+      <div>
+        <div
+          ref={ref}
+          className={classnames(wrapperClassName, 'relative w-fit hover:bg-slate-100 shadow-md', {
+            ['bg-red-50 hover:bg-red-100']: isError,
+            ['bg-slate-100']: isContentVisible && !isError,
+            ['bg-slate-50']: !isContentVisible && !isError,
+          })}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div>
+            <SelectedOptionsList />
 
-          {label && (
-            <label className="absolute left-2.5 top-[-10px] text-sm text-slate-500 font-medium">
-              {required ? `${label}*` : label}
-            </label>
-          )}
-
-          <input
-            {...props}
-            required
-            value={val}
-            onChange={handleChange}
-            ref={inputRef}
-            onFocus={handleFocus}
-            className={classnames(
-              className,
-              'focus:outline-none p-1.5 rounded-md bg-inherit',
+            {label && (
+              <label className={classnames(
+                'absolute left-2.5 top-[-10px] text-sm text-slate-500 font-medium', {
+                  ['text-red-500']: isError,
+                },
+              )}>
+                {required ? `${label}*` : label}
+              </label>
             )}
-          />
+
+            <input
+              {...props}
+              required
+              value={val}
+              onChange={handleChange}
+              ref={inputRef}
+              onFocus={handleFocus}
+              className={classnames(
+                className,
+                'focus:outline-none p-1.5 rounded-md bg-inherit',
+              )}
+            />
+          </div>
+
+          {isContentVisible && (
+            <div className="absolute pt-1 w-full z-10">
+              <div className="bg-slate-100 py-2 px-1 rounded-md shadow-md">
+                <ClickOutsideWrapper onClickOutside={handleHideContent} excludeRefs={[inputRef]}>
+                  {options?.length === 0 ? <p>No items found!</p> : <>{options}</>}
+                </ClickOutsideWrapper>
+              </div>
+            </div>
+          )}
         </div>
 
-        {isContentVisible && (
-          <div className="absolute pt-1 w-full z-10">
-            <div className="bg-slate-100 py-2 px-1 rounded-md shadow-md">
-              <ClickOutsideWrapper onClickOutside={handleHideContent} excludeRefs={[inputRef]}>
-                {options?.length === 0 ? <p>No items found!</p> : <>{options}</>}
-              </ClickOutsideWrapper>
-            </div>
-          </div>
-        )}
+        {customHelperText}
       </div>
     </MyDropdownProvider>
   );

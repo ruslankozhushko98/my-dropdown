@@ -5,6 +5,7 @@ function App() {
     <div className="p-4">
       <MyDropdown
         label="Label"
+        name="label"
         placeholder="Enter value"
         triggerType="focus"
         openByKey="Enter"
