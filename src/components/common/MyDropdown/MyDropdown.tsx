@@ -105,24 +105,24 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
     onMouseLeave?.(e);
   };
 
-  const opts = Children.map(children, child => {
-    if (isValidElement(child)) {
-      return cloneElement(child);
-    }
-
-    return child;
-  });
-
   const val = props.value || value;
 
   const options = useMemo(() => {
+    const opts = Children.map(children, child => {
+      if (isValidElement(child)) {
+        return cloneElement(child);
+      }
+
+      return child;
+    });
+
     return val
       ? opts?.filter(
         child => child.props.children.toLowerCase().includes(String(val).toLowerCase()),
       )
       : opts;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.value, val]);
+  }, [val]);
 
   const customHelperText =
     typeof helperText === 'string'
