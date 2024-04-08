@@ -26,6 +26,7 @@ type DropdownProps = {
   onSelect?: (options: Array<string>) => void;
   wrapperClassName?: string;
   openByKey?: string;
+  isError?: boolean;
 } & PropsWithChildren & InputHTMLAttributes<HTMLInputElement>;
 
 export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
@@ -40,6 +41,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
   onChange,
   openByKey,
   onSelect,
+  isError,
   ...props
 }, ref) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -121,8 +123,9 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
       <div
         ref={ref}
         className={classnames(wrapperClassName, 'relative w-fit hover:bg-slate-100 shadow-md', {
-          ['bg-slate-100']: isContentVisible,
-          ['bg-slate-50']: !isContentVisible,
+          ['bg-red-50 hover:bg-red-100']: isError,
+          ['bg-slate-100']: isContentVisible && !isError,
+          ['bg-slate-50']: !isContentVisible && !isError,
         })}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
