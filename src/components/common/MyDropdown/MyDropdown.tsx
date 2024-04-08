@@ -26,6 +26,7 @@ type DropdownProps = {
   triggerType: 'hover' | 'focus';
   onSelect?: (options: Array<string>) => void;
   wrapperClassName?: string;
+  containerClassName?: string;
   openByKey?: string;
   isError?: boolean;
   helperText?: ReactNode | string;
@@ -40,6 +41,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
   onMouseMove,
   onMouseLeave,
   wrapperClassName,
+  containerClassName,
   onChange,
   openByKey,
   onSelect,
@@ -136,7 +138,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
 
   return (
     <MyDropdownProvider getSelectedOptions={onSelect}>
-      <div>
+      <div className={containerClassName}>
         <div
           ref={ref}
           className={classnames(wrapperClassName, 'relative w-fit hover:bg-slate-100 shadow-md', {
