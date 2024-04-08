@@ -42,6 +42,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
   openByKey,
   onSelect,
   isError,
+  required,
   ...props
 }, ref) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -133,8 +134,15 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
         <div>
           <SelectedOptionsList />
 
+          {label && (
+            <label className="absolute left-2.5 top-[-10px] text-sm text-slate-500 font-medium">
+              {required ? `${label}*` : label}
+            </label>
+          )}
+
           <input
             {...props}
+            required
             value={val}
             onChange={handleChange}
             ref={inputRef}
@@ -145,12 +153,6 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
             )}
           />
         </div>
-
-        {label && (
-          <label className="absolute left-2.5 top-[-10px] text-sm text-slate-500 font-medium">
-            {label}
-          </label>
-        )}
 
         {isContentVisible && (
           <div className="absolute pt-1 w-full z-10">
