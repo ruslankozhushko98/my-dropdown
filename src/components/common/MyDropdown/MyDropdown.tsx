@@ -138,9 +138,8 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
 
   return (
     <MyDropdownProvider getSelectedOptions={onSelect}>
-      <div className={containerClassName}>
+      <div className={containerClassName} ref={ref}>
         <div
-          ref={ref}
           className={classnames(wrapperClassName, 'relative w-fit hover:bg-slate-100 shadow-md', {
             ['bg-red-50 hover:bg-red-100']: isError,
             ['bg-slate-100']: isContentVisible && !isError,
