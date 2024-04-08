@@ -30,6 +30,7 @@ type DropdownProps = {
   openByKey?: string;
   isError?: boolean;
   helperText?: ReactNode | string;
+  rightAddon?: ReactNode;
 } & PropsWithChildren & InputHTMLAttributes<HTMLInputElement>;
 
 export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
@@ -48,6 +49,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
   isError,
   required,
   helperText,
+  rightAddon,
   ...props
 }, ref) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -161,18 +163,22 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
               </label>
             )}
 
-            <input
-              {...props}
-              required
-              value={val}
-              onChange={handleChange}
-              ref={inputRef}
-              onFocus={handleFocus}
-              className={classnames(
-                className,
-                'focus:outline-none p-1.5 rounded-md bg-inherit',
-              )}
-            />
+            <div className="flex items-center">
+              <input
+                {...props}
+                required
+                value={val}
+                onChange={handleChange}
+                ref={inputRef}
+                onFocus={handleFocus}
+                className={classnames(
+                  className,
+                  'focus:outline-none p-1.5 rounded-md bg-inherit',
+                )}
+              />
+
+              {rightAddon && <div className="mr-1">{rightAddon}</div>}
+            </div>
           </div>
 
           {isContentVisible && (
