@@ -120,7 +120,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
 
     return val
       ? opts?.filter(
-        child => child.props.children.toLowerCase().includes(String(val).toLowerCase()),
+        child => child.props?.children?.toLowerCase().includes(String(val).toLowerCase()),
       )
       : opts;
     // eslint-disable-next-line react-hooks/exhaustive-deps
