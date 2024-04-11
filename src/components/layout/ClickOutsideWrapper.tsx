@@ -1,15 +1,15 @@
-import { FC, PropsWithChildren, Ref, useEffect, useRef } from 'react';
+import { FC, PropsWithChildren, RefObject, useEffect, useRef } from 'react';
 
 type Props = {
   onClickOutside: () => void;
-  excludeRefs: Array<Ref<unknown>>;
+  excludeRefs: Array<RefObject<HTMLElement>>;
 } & PropsWithChildren;
 
 export const ClickOutsideWrapper: FC<Props> = ({ children, onClickOutside, excludeRefs }) => {
-  const wrapperRef = useRef(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+    if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node | null)) {
       onClickOutside();
     }
   };
@@ -19,7 +19,7 @@ export const ClickOutsideWrapper: FC<Props> = ({ children, onClickOutside, exclu
       let isExcluded = false;
 
       for (const ref of excludeRefs) {
-        if (ref?.current && ref?.current.contains(event.target)) {
+        if (ref?.current && ref?.current.contains(event.target as Node | null)) {
           isExcluded = true;
           break;
         }
