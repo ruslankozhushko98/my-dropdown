@@ -1,6 +1,6 @@
 import { MyDropdown, MyDropdownOption } from './components/common/MyDropdown';
 
-function App() {
+export const App = () => {
   return (
     <div className="p-4">
       <MyDropdown
@@ -29,6 +29,4 @@ function App() {
       </MyDropdown>
     </div>
   );
-}
-
-export default App;
+};
