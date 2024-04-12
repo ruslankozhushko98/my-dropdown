@@ -4,6 +4,7 @@ export const App = () => {
   return (
     <div className="p-4">
       <MyDropdown
+        id="my-dropdown"
         label="Label"
         name="label"
         placeholder="Enter value"
