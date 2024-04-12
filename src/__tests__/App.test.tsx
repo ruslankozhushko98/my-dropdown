@@ -53,19 +53,13 @@ describe('MyDropdown', () => {
     expect(queryByRole('options-list')).toBeTruthy();
   });
 
-  it('opens when input is hovered', () => {
+  it('opens when input is hovered and closes when input is unhovered', () => {
     const { queryByRole } = render(<HoveringDropdown />);
 
     fireEvent.mouseMove(screen.getByRole('dropdown-input'));
-
     expect(queryByRole('options-list')).toBeInTheDocument();
-  });
-
-  it('closes when input is unhovered', () => {
-    const { queryByRole } = render(<HoveringDropdown />);
 
     fireEvent.mouseLeave(screen.getByRole('dropdown-input'));
-
     expect(queryByRole('options-list')).not.toBeInTheDocument();
   });
 });
