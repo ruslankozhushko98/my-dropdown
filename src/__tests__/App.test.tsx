@@ -46,19 +46,19 @@ describe('App', () => {
 
 describe('MyDropdown', () => {
   it('opens when input is focused', () => {
-    render(<FocusingDropdown />);
+    const { queryByRole } = render(<FocusingDropdown />);
 
     fireEvent.focus(screen.getByRole('dropdown-input'));
 
-    expect(screen.getByRole('options-list')).toBeTruthy();
+    expect(queryByRole('options-list')).toBeTruthy();
   });
 
   it('opens when input is hovered', () => {
-    render(<HoveringDropdown />);
+    const { queryByRole } = render(<HoveringDropdown />);
 
     fireEvent.mouseMove(screen.getByRole('dropdown-input'));
 
-    expect(screen.getByRole('options-list')).toBeInTheDocument();
+    expect(queryByRole('options-list')).toBeInTheDocument();
   });
 
   it('closes when input is unhovered', () => {
