@@ -62,4 +62,11 @@ describe('MyDropdown', () => {
     fireEvent.mouseLeave(screen.getByRole('dropdown-input'));
     expect(queryByRole('options-list')).not.toBeInTheDocument();
   });
+
+  it('opens by clicking Enter key', () => {
+    const { queryByRole } = render(<FocusingDropdown />);
+
+    fireEvent.keyDown(document, { key: 'Enter' });
+    expect(queryByRole('options-list')).toBeInTheDocument();
+  });
 });

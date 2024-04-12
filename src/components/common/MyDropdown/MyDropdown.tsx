@@ -121,6 +121,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
 
     return val
       ? opts?.filter(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (child: any) => child.props?.children?.toLowerCase().includes(String(val).toLowerCase()),
       )
       : opts;
