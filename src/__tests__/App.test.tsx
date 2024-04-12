@@ -10,13 +10,17 @@ const DropdownContent = () => (
   </MyDropdownOption>
 );
 
+const dropdownProps = {
+  label: 'Label',
+  name: 'label',
+  placeholder: 'Enter value',
+  openByKey: 'Enter',
+};
+
 const FocusingDropdown = () => (
   <MyDropdown
-    label="Label"
-    name="label"
-    placeholder="Enter value"
+    {...dropdownProps}
     triggerType="focus"
-    openByKey="Enter"
     onSelect={console.log}
   >
     <DropdownContent />
@@ -25,11 +29,8 @@ const FocusingDropdown = () => (
 
 const HoveringDropdown = () => (
   <MyDropdown
-    label="Label"
-    name="label"
-    placeholder="Enter value"
+    {...dropdownProps}
     triggerType="hover"
-    openByKey="Enter"
     onSelect={console.log}
   >
     <DropdownContent />
