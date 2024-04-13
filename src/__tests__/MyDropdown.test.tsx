@@ -1,12 +1,19 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { nextTick } from 'process';
 
 import { MyDropdown, MyDropdownOption } from 'src/components/common/MyDropdown';
 
 const DropdownContent = () => (
-  <MyDropdownOption value="cat">
-    Cat
-  </MyDropdownOption>
+  <>
+    <MyDropdownOption value="cat">
+      Cat
+    </MyDropdownOption>
+
+    <MyDropdownOption value="duck">
+      Duck
+    </MyDropdownOption>
+  </>
 );
 
 const dropdownProps = {
@@ -17,16 +24,13 @@ const dropdownProps = {
   onSelect: console.log,
 };
 
-const FocusingDropdown = () => (
-  <MyDropdown
-    {...dropdownProps}
-    triggerType="focus"
-  >
+export const TestDropdown = () => (
+  <MyDropdown {...dropdownProps}>
     <DropdownContent />
   </MyDropdown>
 );
 
-const HoveringDropdown = () => (
+const TestHoveringDropdown = () => (
   <MyDropdown
     {...dropdownProps}
     triggerType="hover"
@@ -36,16 +40,20 @@ const HoveringDropdown = () => (
 );
 
 describe('MyDropdown', () => {
-  it('opens when input is focused', () => {
-    const { queryByRole } = render(<FocusingDropdown />);
+  it('opens when input is focused and closes by click outside', () => {
+    const { queryByRole } = render(<TestDropdown />);
 
     fireEvent.focus(screen.getByRole('dropdown-input'));
+    expect(queryByRole('options-list')).toBeInTheDocument();
 
-    expect(queryByRole('options-list')).toBeTruthy();
+    fireEvent.click(document.body);
+    nextTick(() => {
+      expect(queryByRole('options-list')).not.toBeInTheDocument();
+    });
   });
 
   it('opens when input is hovered and closes when input is unhovered', () => {
-    const { queryByRole } = render(<HoveringDropdown />);
+    const { queryByRole } = render(<TestHoveringDropdown />);
 
     fireEvent.mouseMove(screen.getByRole('dropdown-input'));
     expect(queryByRole('options-list')).toBeInTheDocument();
@@ -55,7 +63,7 @@ describe('MyDropdown', () => {
   });
 
   it('opens by clicking Enter key', () => {
-    const { queryByRole } = render(<FocusingDropdown />);
+    const { queryByRole } = render(<TestDropdown />);
 
     fireEvent.keyDown(document, { key: 'Enter' });
     expect(queryByRole('options-list')).toBeInTheDocument();

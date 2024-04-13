@@ -23,7 +23,7 @@ import { SelectedOptionsList } from './SelectedOptionsList';
 
 type DropdownProps = {
   label?: string;
-  triggerType: 'hover' | 'focus';
+  triggerType?: 'hover' | 'focus';
   onSelect?: (options: Array<string>) => void;
   wrapperClassName?: string;
   containerClassName?: string;
