@@ -17,11 +17,21 @@ export const SelectedOptionsList: FC = () => {
         return (
           <li
             key={index}
+            role={`selected-option-${item}`}
             className="rounded-full bg-blue-300 hover:bg-blue-400 px-1.5 py-1.5 mx-0.5"
           >
-            <span className="text-white mr-1 text-sm">{item}</span>
+            <span
+              role={`selected-option-title-${item}`}
+              className="text-white mr-1 text-sm"
+            >
+              {item}
+            </span>
 
-            <button onClick={toggleSelected} className="bg-blue-700 px-2 rounded-full">
+            <button
+              onClick={toggleSelected}
+              role="unselect-btn"
+              className="bg-blue-700 px-2 rounded-full"
+            >
               <span className="text-white font-lg">
                 &times;
               </span>

@@ -6,12 +6,16 @@ import { MyDropdown, MyDropdownOption } from 'src/components/common/MyDropdown';
 
 const DropdownContent = () => (
   <>
-    <MyDropdownOption value="cat">
+    <MyDropdownOption role="cat-option" value="cat">
       Cat
     </MyDropdownOption>
 
-    <MyDropdownOption value="duck">
+    <MyDropdownOption role="duck-option" value="duck">
       Duck
+    </MyDropdownOption>
+
+    <MyDropdownOption role="rat-option" value="rat">
+      Rat
     </MyDropdownOption>
   </>
 );
@@ -39,12 +43,22 @@ const TestHoveringDropdown = () => (
   </MyDropdown>
 );
 
-describe('MyDropdown', () => {
-  it('opens when input is focused and closes by click outside', () => {
-    const { queryByRole } = render(<TestDropdown />);
+const clickOnOption = (): void => {
+  fireEvent.click(screen.getByRole('duck-option'));
+};
 
-    fireEvent.focus(screen.getByRole('dropdown-input'));
-    expect(queryByRole('options-list')).toBeInTheDocument();
+const openDropdownByFocus = () => {
+  const result = render(<TestDropdown />);
+
+  fireEvent.focus(screen.getByRole('dropdown-input'));
+  expect(result.queryByRole('options-list')).toBeInTheDocument();
+
+  return result;
+};
+
+describe('MyDropdown focus', () => {
+  it('opens when input is focused and closes by click outside', () => {
+    const { queryByRole } = openDropdownByFocus();
 
     fireEvent.click(document.body);
     nextTick(() => {
@@ -67,5 +81,26 @@ describe('MyDropdown', () => {
 
     fireEvent.keyDown(document, { key: 'Enter' });
     expect(queryByRole('options-list')).toBeInTheDocument();
+  });
+
+  it('can select/unselect options by click on it', () => {
+    const { queryByRole } = openDropdownByFocus();
+
+    clickOnOption();
+
+    expect(queryByRole('selected-option-duck')).toBeInTheDocument();
+
+    clickOnOption();
+
+    expect(queryByRole('selected-option-duck')).not.toBeInTheDocument();
+  });
+
+  it('can unselect by click on remove button', () => {
+    const { queryByRole } = openDropdownByFocus();
+
+    clickOnOption();
+
+    fireEvent.click(screen.getByRole('unselect-btn'));
+    expect(queryByRole('selected-option-duck')).not.toBeInTheDocument();
   });
 });
