@@ -76,7 +76,7 @@ export const MyDropdown = forwardRef<HTMLDivElement, DropdownProps>(({
     document.addEventListener('keydown', handlePressEnter);
 
     return () => {
-      document.addEventListener('keydown', handlePressEnter);
+      document.removeEventListener('keydown', handlePressEnter);
     };
   }, [isContentVisible, openByKey]);
 
